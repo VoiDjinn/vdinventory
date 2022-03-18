@@ -3,8 +3,8 @@
 #include "VDInventory.h"
 
 void register_vdinventory_types(){
-	ClassDB::register_class<VDIVcInventory>();
-    ClassDB::register_class<VDIVcInventoryStock>();
+	ClassDB::register_class<VDInventory>();
+    ClassDB::register_class<VDInventoryStock>();
 }
 
 void unregister_vdinventory_types() {}

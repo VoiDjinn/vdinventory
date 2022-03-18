@@ -2,26 +2,24 @@
 #define VDINVENTORY_H
 
 #include "core/variant.h"
-#include "core/reference.h"
-#include "../vdcore/VDComponent.h"
+#include "core/resource.h"
 
-class VDIVcInventoryStock;
+class VDInventoryStock;
 
-class VDIVcInventory : public VDCcComponent
+class VDInventory : public Resource
 {
-    GDCLASS ( VDIVcInventory, VDCcComponent );
+    GDCLASS ( VDInventory, Resource );
 
-    Ref<VDIVcInventoryStock> create_item_stock ( const Variant &item, String alias );
-
+    Ref<VDInventoryStock> create_item_stock ( const Variant &item, String alias );
 protected:
     static void _bind_methods();
 
-    HashMap<String, Ref<VDIVcInventoryStock>> item_stocks;
+    HashMap<String, Ref<VDInventoryStock>> item_stocks;
 
-    virtual Ref<VDIVcInventoryStock> stock_creation ( const Variant &item, String alias );
+    virtual Ref<VDInventoryStock> stock_creation ( const Variant &item, String alias );
 
 public:
-    VDIVcInventory();
+    VDInventory();
 
     enum AmountUsageFlag {
         KEEP_ON_ZERO,
@@ -37,11 +35,11 @@ protected:
     AmountUsageFlag amountUsage = AmountUsageFlag::REMOVE_NON_POSITIVE;
 
 public:
-    Ref<VDIVcInventoryStock> set_item_stock ( const Variant &item, String id, int amount = 1 );
+    Ref<VDInventoryStock> set_item_stock ( const Variant &item, String id, int amount = 1 );
     void remove_item_stock ( String id );
-    void transfer_item ( Ref<VDIVcInventory> other_inventory, String id, int amount, bool strict_transfer = true );
+    void transfer_item ( Ref<VDInventory> other_inventory, String id, int amount, bool strict_transfer = true );
 
-    Ref<VDIVcInventoryStock> get_item_stock ( String id );
+    Ref<VDInventoryStock> get_item_stock ( String id );
     int get_item_stock_amount ( String id );
     Variant get_item_stock_object ( String item_id );
 
@@ -51,18 +49,18 @@ public:
     AmountUsageFlag get_amount_usage_flag() const;
 };
 
-VARIANT_ENUM_CAST ( VDIVcInventory::AmountUsageFlag )
+VARIANT_ENUM_CAST ( VDInventory::AmountUsageFlag )
 
 // VDInventoryStocks
 
-class VDIVcInventoryStock : public Reference
+class VDInventoryStock : public Reference
 {
-    GDCLASS ( VDIVcInventoryStock, Reference );
+    GDCLASS ( VDInventoryStock, Reference );
 
-    friend class VDIVcInventory;
+    friend class VDInventory;
 
     String stock_alias;
-    Ref<VDIVcInventory> owning_inventory;
+    Ref<VDInventory> owning_inventory;
 
 public:
     enum CustomAmountUsage {
@@ -70,7 +68,7 @@ public:
         OVERWRITE
     };
 
-    VDIVcInventory::AmountUsageFlag amountUsage = VDIVcInventory::AmountUsageFlag::REMOVE_NON_POSITIVE;
+    VDInventory::AmountUsageFlag amountUsage = VDInventory::AmountUsageFlag::REMOVE_NON_POSITIVE;
     CustomAmountUsage customUsage = CustomAmountUsage::FROM_INVENTORY;
 
 protected:
@@ -80,10 +78,10 @@ protected:
     int item_amount;
 
 public:
-    VDIVcInventoryStock();
+    VDInventoryStock();
 
-    void set_amount_usage_flag ( VDIVcInventory::AmountUsageFlag flag );
-    VDIVcInventory::AmountUsageFlag get_amount_usage_flag() const;
+    void set_amount_usage_flag ( VDInventory::AmountUsageFlag flag );
+    VDInventory::AmountUsageFlag get_amount_usage_flag() const;
     void set_custom_usage_flag ( CustomAmountUsage flag );
     CustomAmountUsage get_custom_usage_flag() const;
 
@@ -93,9 +91,9 @@ public:
     Variant get_item_object() const;
     void set_item_amount ( int amount );
     int get_item_amount() const;
-    Ref<VDIVcInventory> get_owning_inventory() const;
+    Ref<VDInventory> get_owning_inventory() const;
 };
 
-VARIANT_ENUM_CAST ( VDIVcInventoryStock::CustomAmountUsage )
+VARIANT_ENUM_CAST ( VDInventoryStock::CustomAmountUsage )
 
 #endif
